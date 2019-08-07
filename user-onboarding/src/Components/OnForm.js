@@ -34,6 +34,17 @@ const OnForm = withFormik({
         };
     },
 
+    //======VALIDATION SCHEMA==========
+    validationSchema: Yup.object().shape({
+        email: Yup.string()
+        .email()
+        .required(),
+        password: Yup.string()
+        .min(6)
+        .required()
+    }),
+    //==============
+
     handleSubmit(values){
         console.log(values)
         //form submissoon gode..GET/REQUEST
