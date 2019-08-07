@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 
 const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
     const [users, setUsers] = useState([])
-    console.log('users', users)
+    console.log('state -users', users)
 
     useEffect(() => {
         if (status){
@@ -23,11 +23,13 @@ const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
 
     return (
         <>
-            <div>
+            <ul>
+
                 {users.map(user => (
-                    <li key={user}> {user} </li>
-                ))}
-            </div>
+                    <li > {user.name} </li>
+                ))} 
+
+            </ul> 
 
             <Form>
                 <div>
@@ -44,6 +46,17 @@ const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
                 <div>
                     {touched.password && errors.password && <p>{errors.password}</p>}
                     <Field type = 'password' name='password' placeholder= 'Password'/>
+                </div>
+
+                <div>
+                    {touched.role && errors.role && <p>{errors.role}</p>}
+                    <Field component="select" className="role" name="role">
+                        <option>Please Choose your Role</option>
+                        <option value="juniordev">Junior Dev</option>
+                        <option value="seniordev">Senior Dev</option>
+                        <option value="teamlead">Team Lead</option>
+                        <option value="juniordev">None of the Above</option>
+                    </Field>
                 </div>
 
                 <div>
@@ -65,12 +78,13 @@ const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
 
 const OnForm = withFormik({
 
-    mapPropsToValues({name, email, password, terms}){
+    mapPropsToValues({name, email, password, terms, role}){
         return{
             name: name || '',
             email: email || '',
             password: password || '',
-            terms: terms || false
+            terms: terms || false,
+            role: role || ''
         };
     },
 
