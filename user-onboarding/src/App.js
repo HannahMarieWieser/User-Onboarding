@@ -1,9 +1,6 @@
 import React from 'react';
-import { withFormik, Form, Field } from "formik";
-import axios from 'axios';
-import * as Yup from 'yup';
 import './App.css';
-import Form from './Components/Form'
+import OnForm from './Components/OnForm'
 
 
 function App() {
