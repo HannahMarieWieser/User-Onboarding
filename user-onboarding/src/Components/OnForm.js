@@ -34,7 +34,7 @@ const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
             <Form>
                 <div>
                     {touched.name && errors.name && <p>{errors.name}</p>}
-                    <Field type = 'text' name='name' placeholder= 'Full Name'/>
+                    <Field type = 'text' name='name' placeholder= 'Firstname Lastname'/>
                 </div>
 
                 <div>
@@ -91,7 +91,8 @@ const OnForm = withFormik({
     //======VALIDATION SCHEMA==========
     validationSchema: Yup.object().shape({
         name: Yup.string()
-        .required('Full name is required'),
+        .required('Full name is required')
+        .matches(/[ ]/,'Please enter first and last name'),
 
         email: Yup.string()
         .email('Email not valid')
@@ -99,10 +100,13 @@ const OnForm = withFormik({
 
         password: Yup.string()
         .min(6, 'Password must be 6 characters or longer')
+        .matches(/[0-9]/, 'Needs at least one number')
+        .matches(/[~*.,&^%$#@!()><?/]/, 'Needs at least one special character')
         .required('Password is required'),
 
         terms: Yup.bool()
-        .oneOf([true], 'Field must be checked')
+        .oneOf([true], 'Field must be checked'),
+
     }),
 
     handleSubmit(values, {resetForm, setErrors, setSubmitting, setStatus}){
