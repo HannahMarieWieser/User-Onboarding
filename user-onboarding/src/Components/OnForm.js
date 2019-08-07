@@ -40,7 +40,7 @@ function OnboardForm({values, errors, touched}){
             </div>
 
 
-            <button>Submit!</button>
+            <button type= 'submit'>Submit!</button>
         </Form>
     )
 }  
@@ -75,9 +75,25 @@ const OnForm = withFormik({
     }),
     //==============
 
-    handleSubmit(values){
+    handleSubmit(values,{resetForm, setErrors, setSubmitting}){
         console.log(values)
-        //form submissoon gode..GET/REQUEST
+        
+        if(values.email === 'waffle@syrup.com'){
+            setErrors({email:'That email is already taken'})
+        }
+        else{
+            axios
+            .post('https://reqres.in/api/users', values)
+            .then(res =>{
+                console.log('res', res)//console log response
+                resetForm();
+                setSubmitting(false)
+            })
+            .catch(err =>{
+                console.log('err', err)//console log error
+                setSubmitting(false)
+            })
+        }
     }
 
 })(OnboardForm);
