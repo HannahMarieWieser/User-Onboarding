@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { withFormik, Form, Field } from "formik";
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -11,37 +11,54 @@ import * as Yup from 'yup';
 
 
 
-function OnboardForm({values, errors, touched}){
+const OnboardForm = ({values, errors, handleSubmit, touched, status}) => {
+    const [users, setUsers] = useState([])
+    console.log('users', users)
+
+    useEffect(() => {
+        if (status){
+            setUsers([...users, status])
+        }
+    }, [status]);
+
     return (
-        <Form>
+        <>
             <div>
-                {touched.name && errors.name && <p>{errors.name}</p>}
-                <Field type = 'text' name='name' placeholder= 'Full Name'/>
+                {users.map(user => (
+                    <li key={user}> {user} </li>
+                ))}
             </div>
 
-            <div>
-                {touched.email && errors.email && <p>{errors.email}</p>} 
-                {/* if there is an error, this shows you the errors message. */}
-                <Field type = 'email' name='email' placeholder= 'Email'/>
-            </div>
+            <Form>
+                <div>
+                    {touched.name && errors.name && <p>{errors.name}</p>}
+                    <Field type = 'text' name='name' placeholder= 'Full Name'/>
+                </div>
 
-            <div>
-                {touched.password && errors.password && <p>{errors.password}</p>}
-                <Field type = 'password' name='password' placeholder= 'Password'/>
-            </div>
+                <div>
+                    {touched.email && errors.email && <p>{errors.email}</p>} 
+                    {/* if there is an error, this shows you the errors message. */}
+                    <Field type = 'email' name='email' placeholder= 'Email'/>
+                </div>
 
-            <div>
-                {touched.terms && errors.terms && <p>{errors.terms}</p>}
-                <label className="checkbox-container"> 
-                    Terms of Service 
-                    <Field type="checkbox" name="terms" checked={values.terms}
-                    />
-                </label>
-            </div>
+                <div>
+                    {touched.password && errors.password && <p>{errors.password}</p>}
+                    <Field type = 'password' name='password' placeholder= 'Password'/>
+                </div>
+
+                <div>
+                    {touched.terms && errors.terms && <p>{errors.terms}</p>}
+                    <label className="checkbox-container"> 
+                        Terms of Service 
+                        <Field type="checkbox" name="terms" checked={values.terms}
+                        />
+                    </label>
+                </div>
 
 
-            <button type= 'submit'>Submit!</button>
-        </Form>
+                <button type= 'submit'>Submit!</button>
+            </Form>
+        </>
     )
 }  
 
@@ -73,9 +90,8 @@ const OnForm = withFormik({
         terms: Yup.bool()
         .oneOf([true], 'Field must be checked')
     }),
-    //==============
 
-    handleSubmit(values,{resetForm, setErrors, setSubmitting}){
+    handleSubmit(values, {resetForm, setErrors, setSubmitting, setStatus}){
         console.log(values)
         
         if(values.email === 'waffle@syrup.com'){
@@ -88,6 +104,7 @@ const OnForm = withFormik({
                 console.log('res', res)//console log response
                 resetForm();
                 setSubmitting(false)
+                setStatus(res.data)
             })
             .catch(err =>{
                 console.log('err', err)//console log error
@@ -98,4 +115,4 @@ const OnForm = withFormik({
 
 })(OnboardForm);
 
-export default OnForm
+export default OnForm;
